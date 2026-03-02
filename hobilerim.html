@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hobilerim | Alper Türel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --gold: #c8a96e;
+      --gold-dim: #8a7048;
+      --white: #e8e4dc;
+      --muted: #6b6b7a;
+      --accent: #2a2a3a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(10,10,15,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,169,110,0.12);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .page-header {
+      height: 35vh;
+      min-height: 240px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 4rem 3rem;
+      position: relative;
+      background: 
+        linear-gradient(to bottom, rgba(10,10,15,0.7), var(--bg)),
+        linear-gradient(135deg, var(--bg) 0%, #1a1a28 50%, var(--bg) 100%);
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 30% 60%, rgba(200,169,110,0.05) 0%, transparent 60%);
+    }
+
+    .page-title-wrap {
+      position: relative;
+      z-index: 1;
+      padding-top: 80px;
+      width: 100%;
+      text-align: center
+    }
+
+    .page-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.8rem;
+      justify-content: center;
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 4rem;
+    }
+
+    .hobbies-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hobby-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid rgba(200,169,110,0.1);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+
+    .hobby-item:first-child {
+      border-top: 1px solid rgba(200,169,110,0.1);
+    }
+
+    .hobby-item:hover {
+      background: rgba(200,169,110,0.02);
+    }
+
+    .hobby-info {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hobby-number {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--gold-dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .hobby-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+      transition: color 0.3s;
+    }
+
+    .hobby-item:hover .hobby-title {
+      color: var(--gold);
+    }
+
+    .hobby-desc {
+      font-size: 0.8rem;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 380px;
+      letter-spacing: 0.03em;
+    }
+
+    .hobby-animation {
+      position: relative;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 1px solid rgba(200,169,110,0.1);
+      overflow: hidden;
+    }
+
+    /* ===== ANIMATION 1: Photography - Camera Shutter ===== */
+    .camera-anim {
+      position: relative;
+      width: 100px;
+      height: 80px;
+    }
+
+    .camera-body {
+      width: 100px;
+      height: 70px;
+      border: 2px solid var(--gold-dim);
+      border-radius: 8px;
+      position: absolute;
+      bottom: 0;
+    }
+
+    .camera-lens {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--gold-dim);
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .camera-lens::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--gold-dim);
+    }
+
+    .camera-lens::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(200,169,110,0.2);
+      animation: lensRotate 8s linear infinite;
+    }
+
+    @keyframes lensRotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .camera-flash {
+      position: absolute;
+      top: 0; right: 10px;
+      width: 18px; height: 14px;
+      border: 2px solid var(--gold-dim);
+      border-radius: 2px;
+    }
+
+    .camera-shutter {
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      background: transparent;
+      animation: shutterFlash 4s ease-in-out infinite;
+    }
+
+    @keyframes shutterFlash {
+      0%, 85%, 100% { background: transparent; }
+      87% { background: rgba(200,169,110,0.15); }
+      90% { background: rgba(200,169,110,0.05); }
+    }
+
+    /* Focus ring */
+    .focus-ring {
+      position: absolute;
+      width: 120px; height: 120px;
+      border: 1px solid rgba(200,169,110,0.15);
+      border-radius: 50%;
+      animation: focusPulse 3s ease-in-out infinite;
+    }
+
+    .focus-ring:nth-child(2) {
+      width: 160px; height: 160px;
+      animation-delay: 0.5s;
+    }
+
+    .focus-ring:nth-child(3) {
+      width: 200px; height: 200px;
+      animation-delay: 1s;
+    }
+
+    @keyframes focusPulse {
+      0%, 100% { opacity: 0.1; transform: scale(0.95); }
+      50% { opacity: 0.4; transform: scale(1); }
+    }
+
+    /* ===== ANIMATION 2: Travel - World Globe ===== */
+    .globe-anim {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .globe-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold-dim);
+      position: absolute;
+      top: 10px; left: 10px;
+      overflow: hidden;
+    }
+
+    .globe-lines {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      animation: globeSpin 10s linear infinite;
+    }
+
+    .globe-lines::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 100%;
+      background: rgba(200,169,110,0.3);
+      box-shadow: -25px 0 0 rgba(200,169,110,0.15), 25px 0 0 rgba(200,169,110,0.15);
+    }
+
+    .globe-lines::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 1px;
+      background: rgba(200,169,110,0.3);
+      box-shadow: 0 -20px 0 rgba(200,169,110,0.15), 0 20px 0 rgba(200,169,110,0.15);
+    }
+
+    @keyframes globeSpin {
+      to { transform: rotateY(360deg); }
+    }
+
+    .globe-dot {
+      position: absolute;
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: orbitDot 6s linear infinite;
+      top: 50%; left: 50%;
+      transform-origin: -40px 0;
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+    @keyframes orbitDot {
+      to { transform: rotate(360deg) translateX(-40px); }
+    }
+
+    .globe-trail {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 1px dashed rgba(200,169,110,0.2);
+      transform: translate(-50%, -50%);
+    }
+
+    /* ===== ANIMATION 3: Open Source / Coding ===== */
+    .code-anim {
+      width: 200px;
+      font-size: 0.7rem;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .code-line {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+    }
+
+    .code-line.l1 { animation: typeIn 0.5s 0.2s forwards; color: var(--gold-dim); }
+    .code-line.l2 { animation: typeIn 0.6s 0.9s forwards; color: #a8a4a0; }
+    .code-line.l3 { animation: typeIn 0.4s 1.6s forwards; color: var(--gold-dim); }
+    .code-line.l4 { animation: typeIn 0.5s 2.1s forwards; color: #a8a4a0; }
+    .code-line.l5 { animation: typeIn 0.3s 2.8s forwards; color: var(--gold-dim); }
+    .code-line.l6 { animation: typeIn 0.4s 3.3s forwards; color: var(--gold); }
+
+    @keyframes typeIn {
+      to { width: 100%; }
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 2px; height: 12px;
+      background: var(--gold);
+      animation: blink 0.8s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Particles background for each hobby */
+    .hobby-animation::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(200,169,110,0.04) 0%, transparent 70%);
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid rgba(200,169,110,0.1);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    footer a { color: var(--gold-dim); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .page-header { padding: 0 1.5rem 2rem; }
+      main { padding: 3rem 1.5rem; }
+      .hobby-item { grid-template-columns: 1fr; }
+      .hobby-info { padding: 2.5rem 1.5rem; }
+      .hobby-animation { height: 250px; border-left: none; border-top: 1px solid rgba(200,169,110,0.1); }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Alper TÜREL</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Anasayfa</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="hobilerim.html" class="active">Hobilerim</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="page-title-wrap">
+    <div class="page-eyebrow">Kişisel İlgi Alanları</div>
+    <h1 class="page-title">Hobilerim</h1>
+  </div>
+</div>
+
+<main>
+  <div class="hobbies-list">
+
+    <!-- Hobi 1: Fotoğrafçılık -->
+    <div class="hobby-item">
+      <div class="hobby-info">
+        <div class="hobby-number">01</div>
+        <h2 class="hobby-title">Fotoğrafçılık</h2>
+        <p class="hobby-desc">
+          Hayatın anlık kesitlerini ölümsüzleştirmek bana hep büyüleyici gelmiştir. 
+          Sokak fotoğrafçılığından manzara çekimlerine kadar farklı türleri keşfediyorum. 
+          Doğru ışığı bulmak ve o mükemmel kareyi yakalamak; sabır, gözlem ve teknik 
+          bilgiyi bir araya getiren bir sanat.
+        </p>
+      </div>
+      <div class="hobby-animation">
+        <div class="focus-ring"></div>
+        <div class="focus-ring"></div>
+        <div class="focus-ring"></div>
+        <div class="camera-anim">
+          <div class="camera-shutter"></div>
+          <div class="camera-body"></div>
+          <div class="camera-lens"></div>
+          <div class="camera-flash"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hobi 2: Seyahat -->
+    <div class="hobby-item">
+      <div class="hobby-info">
+        <div class="hobby-number">02</div>
+        <h2 class="hobby-title">Seyahat</h2>
+        <p class="hobby-desc">
+          Yeni şehirler, kültürler ve insanlarla tanışmak dünya görüşümü genişletiyor. 
+          Her yolculuk farklı bir bakış açısı kazandırıyor. Tarihi mekanları gezmek, 
+          yerel mutfakları tatmak ve farklı yaşam tarzlarını yerinde deneyimlemek 
+          benim için vazgeçilmez bir zenginlik kaynağı.
+        </p>
+      </div>
+      <div class="hobby-animation">
+        <div class="globe-anim">
+          <div class="globe-trail"></div>
+          <div class="globe-circle">
+            <div class="globe-lines"></div>
+          </div>
+          <div class="globe-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hobi 3: Açık Kaynak Projeler -->
+    <div class="hobby-item">
+      <div class="hobby-info">
+        <div class="hobby-number">03</div>
+        <h2 class="hobby-title">Açık Kaynak & Kodlama</h2>
+        <p class="hobby-desc">
+          Mesleğimin doğasından beslenen bu hobim, iş saatleri dışında da kod yazmaktan 
+          keyif aldığımı gösteriyor. GitHub üzerinde kişisel projeler geliştiriyor, açık 
+          kaynak topluluklarını takip ediyorum. Yeni teknolojileri öğrenmek ve sınırlarımı 
+          zorlamak benim için sürekli bir tutku.
+        </p>
+      </div>
+      <div class="hobby-animation">
+        <div class="code-anim">
+          <span class="code-line l1">function test() {</span>
+          <span class="code-line l2">&nbsp;&nbsp;const api = new API();</span>
+          <span class="code-line l3">&nbsp;&nbsp;await api.run();</span>
+          <span class="code-line l4">&nbsp;&nbsp;expect(result)</span>
+          <span class="code-line l5">&nbsp;&nbsp;&nbsp;&nbsp;.toBe(true);</span>
+          <span class="code-line l6">} <span class="cursor-blink"></span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <span>© 2025 Alper Türel</span>
+  <span>Ankara, Türkiye</span>
+  <a href="mailto:alperturel0@gmail.com">alperturel0@gmail.com</a>
+</footer>
+
+</body>
+</html>

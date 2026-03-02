@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alper Türel | Yazılım Mühendisi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --gold: #c8a96e;
+      --gold-dim: #8a7048;
+      --white: #e8e4dc;
+      --muted: #6b6b7a;
+      --accent: #2a2a3a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,169,110,0.12);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--gold);
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(105deg, rgba(10,10,15,0.97) 35%, rgba(10,10,15,0.6) 65%, rgba(10,10,15,0.92) 100%),
+        url('https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1600&q=80') center/cover no-repeat;
+      animation: bgPan 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPan {
+      from { transform: scale(1.05) translateX(0); }
+      to { transform: scale(1.05) translateX(-2%); }
+    }
+
+    /* Grid overlay */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(200,169,110,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,169,110,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 4rem;
+      max-width: 700px;
+      animation: heroIn 1.2s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title span {
+      display: block;
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .hero-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 420px;
+      margin-bottom: 3rem;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px solid rgba(200,169,110,0.3);
+      padding: 1rem 2rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(200,169,110,0.08);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .hero-cta:hover::before { transform: scaleX(1); }
+    .hero-cta:hover { border-color: var(--gold); }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      z-index: 2;
+      animation: heroIn 1.5s 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* QUICK STATS */
+    .stats-bar {
+      background: var(--surface);
+      border-top: 1px solid rgba(200,169,110,0.1);
+      border-bottom: 1px solid rgba(200,169,110,0.1);
+      padding: 2.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      text-align: center;
+      animation: fadeUp 1s 0.8s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--gold);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid rgba(200,169,110,0.1);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    footer a { color: var(--gold-dim); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .hero-content { padding: 0 1.5rem; }
+      .stats-bar { padding: 2rem 1.5rem; grid-template-columns: 1fr; gap: 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+      .scroll-hint { left: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Alper TÜREL</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Anasayfa</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="hobilerim.html">Hobilerim</a></li>
+    <li><a href="iletisim.html">İletişim</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Bilgisayar Mühendisi & CBS Uzman Yardımcısı</div>
+    <h1 class="hero-title">
+      Alper<br>
+      <span>Türel</span>
+    </h1>
+    <p class="hero-desc">
+      Bilgisayar Mühendisi — Yazılım test otomasyonu, API testleri ve sistem yönetimi 
+      alanlarında deneyimli. Kod kalitesine ve sürdürülebilir çözümlere odaklı.<br>
+      Coğrafi Bilgi Sistemleri alanında kendimi geliştirmeye açık ve istekliyim.
+    </p>
+    <a href="hakkimda.html" class="hero-cta">
+      Daha Fazla Bilgi
+      <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+        <path d="M1 5h14M10 1l5 4-5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Aşağı Kaydır
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div>
+    <span class="stat-number">5+</span>
+    <div class="stat-label">Yıl Deneyim</div>
+  </div>
+  <div>
+    <span class="stat-number">3+</span>
+    <div class="stat-label">Kurum & Şirket</div>
+  </div>
+  <div>
+    <span class="stat-number">10+</span>
+    <div class="stat-label">Teknoloji & Araç</div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Alper Türel</span>
+  <span>Ankara, Türkiye</span>
+  <a href="mailto:alperturel0@gmail.com">alperturel0@gmail.com</a>
+</footer>
+
+</body>
+</html>

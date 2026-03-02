@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İletişim | Alper Türel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --gold: #c8a96e;
+      --gold-dim: #8a7048;
+      --white: #e8e4dc;
+      --muted: #6b6b7a;
+      --accent: #2a2a3a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      background: rgba(10,10,15,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,169,110,0.12);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .page-header {
+      height: 35vh;
+      min-height: 240px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 4rem 3rem;
+      position: relative;
+      background: 
+        linear-gradient(to bottom, rgba(10,10,15,0.7), var(--bg)),
+        linear-gradient(135deg, var(--bg) 0%, #1a1a28 50%, var(--bg) 100%);
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 70% 40%, rgba(200,169,110,0.05) 0%, transparent 60%);
+    }
+
+    .page-title-wrap {
+     position: relative;
+     z-index: 1;
+     padding-top: 80px;
+     width: 100%;
+     text-align: center;
+    }
+
+    .page-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.8rem;
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 4rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      margin-bottom: 0;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .contact-info h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+      align-items: flex-start;
+    }
+
+    .contact-icon {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(200,169,110,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .contact-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--gold-dim);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+    }
+
+    .contact-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-value {
+      font-size: 0.82rem;
+      color: var(--white);
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+    }
+
+    .contact-value a {
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .contact-value a:hover { color: var(--gold); }
+
+    /* MAP SECTION */
+    .map-section {
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .map-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .map-label .section-label {
+      margin-bottom: 0;
+    }
+
+    .map-address {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    #map {
+      width: 100%;
+      height: 550px;
+      border: 1px solid rgba(200,169,110,0.15);
+    }
+
+    /* Custom Leaflet styles */
+    .leaflet-popup-content-wrapper {
+      background: var(--surface);
+      color: var(--white);
+      border: 1px solid rgba(200,169,110,0.2);
+      border-radius: 0;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .leaflet-popup-tip { background: var(--surface); }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid rgba(200,169,110,0.1);
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    footer a { color: var(--gold-dim); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .page-header { padding: 0 1.5rem 2rem; }
+      main { padding: 3rem 1.5rem; }
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Alper TÜREL</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Anasayfa</a></li>
+    <li><a href="hakkimda.html">Hakkımda</a></li>
+    <li><a href="hobilerim.html">Hobilerim</a></li>
+    <li><a href="iletisim.html" class="active">İletişim</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="page-title-wrap">
+    <div class="page-eyebrow">Ulaşın</div>
+    <h1 class="page-title">İletişim</h1>
+  </div>
+</div>
+
+<main>
+  <div class="contact-grid">
+
+    <div class="contact-info">
+      <div class="section-label">Bilgiler</div>
+      <h2>Benimle<br>İletişime Geçin</h2>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">Adres</div>
+          <div class="contact-value">
+            Mustafa Kemal, 2082. Cd. No:52<br>
+            06510 Çankaya / Ankara
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path stroke-linejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.68 2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 6.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 13.92z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">Telefon</div>
+          <div class="contact-value">
+            <a href="tel:+905455977922">0545 597 79 22</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">E-Posta</div>
+          <div class="contact-value">
+            <a href="mailto:alperturel0@gmail.com">alperturel0@gmail.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-label">GitHub</div>
+          <div class="contact-value">
+            <a href="https://github.com/AlperTurel" target="_blank">github.com/AlperTurel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-section">
+      <div class="map-label">
+        <div class="section-label">Konum</div>
+        <div class="map-address">Mustafa Kemal, 2082. Cd. No:52, 06510 Çankaya / Ankara</div>
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>© 2025 Alper Türel</span>
+  <span>Ankara, Türkiye</span>
+  <a href="mailto:alperturel0@gmail.com">alperturel0@gmail.com</a>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  // Coordinates for Mustafa Kemal, 2082. Cd. No:52, 06510 Çankaya/Ankara
+  const lat = 39.9038;
+  const lng = 32.7979;
+
+  const map = L.map('map', {
+    center: [lat, lng],
+    zoom: 15,
+    zoomControl: true,
+    scrollWheelZoom: false
+  });
+
+  // Standard OSM tile layer
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+
+  // Custom gold marker icon
+  const goldIcon = L.divIcon({
+    html: `
+      <div style="
+        width: 16px; height: 16px;
+        background: #c8a96e;
+        border-radius: 50%;
+        border: 2px solid #0a0a0f;
+        box-shadow: 0 0 0 4px rgba(200,169,110,0.25), 0 0 16px rgba(200,169,110,0.4);
+        animation: pulse 2s ease-in-out infinite;
+      "></div>
+      <style>
+        @keyframes pulse {
+          0%, 100% { box-shadow: 0 0 0 4px rgba(200,169,110,0.25), 0 0 16px rgba(200,169,110,0.4); }
+          50% { box-shadow: 0 0 0 8px rgba(200,169,110,0.1), 0 0 24px rgba(200,169,110,0.6); }
+        }
+      </style>
+    `,
+    className: '',
+    iconSize: [16, 16],
+    iconAnchor: [8, 8]
+  });
+
+  L.marker([lat, lng], { icon: goldIcon })
+    .addTo(map)
+    .bindPopup(`
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.75rem; padding: 0.3rem; color: #c8a96e;">
+        <strong style="display: block; margin-bottom: 0.3rem;">Alper Türel</strong>
+        <span style="color: #8a8a96;">Mustafa Kemal, 2082. Cd. No:52<br>06510 Çankaya / Ankara</span>
+      </div>
+    `)
+    .openPopup();
+</script>
+
+</body>
+</html>
