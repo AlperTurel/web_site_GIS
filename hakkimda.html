@@ -28,6 +28,10 @@
       overflow-x: hidden;
     }
 
+    body.no-scroll {
+      overflow: hidden;
+    }
+
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -78,6 +82,69 @@
     .nav-links a:hover, .nav-links a.active { color: var(--gold); }
     .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
+    /* Hamburger buton */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 200;
+    }
+
+    .hamburger span {
+      width: 30px;
+      height: 2px;
+      background: var(--gold);
+      transition: all 0.3s linear;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(10,10,15,0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 150;
+      }
+
+      .nav-links.active {
+        transform: translateX(0);
+      }
+
+      .nav-links a {
+        font-size: 1.2rem;
+        color: var(--white);
+      }
+    }
+
     /* PAGE HEADER */
     .page-header {
       height: 35vh;
@@ -99,7 +166,6 @@
       background-image: radial-gradient(circle at 60% 40%, rgba(200,169,110,0.06) 0%, transparent 60%);
     }
 
-    /* Decorative lines */
     .page-header::after {
       content: '';
       position: absolute;
@@ -210,7 +276,6 @@
       position: relative;
     }
 
-    /* Ambient glow */
     .coder-anim-wrap::before {
       content: '';
       position: absolute;
@@ -264,7 +329,6 @@
       box-shadow: 0 0 20px rgba(200,169,110,0.08), inset 0 0 30px rgba(0,0,0,0.5);
     }
 
-    /* Screen glow from code */
     .monitor-screen::before {
       content: '';
       position: absolute;
@@ -322,7 +386,6 @@
       to { opacity: 1; }
     }
 
-    /* Typing cursor on screen */
     .screen-cursor {
       display: inline-block;
       width: 6px; height: 6px;
@@ -370,14 +433,13 @@
       50% { background: var(--gold-dim); transform: scaleY(0.85); }
     }
 
-    /* PERSON (stick figure) */
+    /* PERSON */
     .person {
       position: absolute;
       bottom: 10px;
       right: -10px;
     }
 
-    /* Head */
     .p-head {
       width: 22px; height: 22px;
       border-radius: 50%;
@@ -387,7 +449,6 @@
       background: #1a1520;
     }
 
-    /* Hair suggestion */
     .p-head::before {
       content: '';
       position: absolute;
@@ -397,7 +458,6 @@
       border-radius: 50% 50% 0 0;
     }
 
-    /* Body */
     .p-body {
       width: 2px;
       height: 36px;
@@ -406,7 +466,6 @@
       position: relative;
     }
 
-    /* Arms */
     .p-body::before {
       content: '';
       position: absolute;
@@ -424,7 +483,6 @@
       to { transform: rotate(8deg); }
     }
 
-    /* Legs */
     .p-body::after {
       content: '';
       position: absolute;
@@ -555,6 +613,11 @@
 
 <nav>
   <a href="index.html" class="nav-logo">Alper TÜREL</a>
+  <button class="hamburger" aria-label="Menü" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
   <ul class="nav-links">
     <li><a href="index.html">Anasayfa</a></li>
     <li><a href="hakkimda.html" class="active">Hakkımda</a></li>
@@ -594,7 +657,6 @@
 
     <div class="coder-anim-wrap">
       <div class="coder-scene">
-
         <!-- Monitor -->
         <div class="monitor">
           <div class="monitor-screen">
@@ -682,7 +744,6 @@
           <div class="chair-leg1"></div>
           <div class="chair-leg2"></div>
         </div>
-
       </div>
     </div>
   </div>
@@ -713,6 +774,38 @@
   <span>Ankara, Türkiye</span>
   <a href="mailto:alperturel0@gmail.com">alperturel0@gmail.com</a>
 </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const body = document.body;
+
+    function toggleMenu() {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true' ? false : true;
+      hamburger.setAttribute('aria-expanded', expanded);
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      body.classList.toggle('no-scroll');
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+
+    document.addEventListener('click', function(event) {
+      if (!navLinks.contains(event.target) && !hamburger.contains(event.target) && navLinks.classList.contains('active')) {
+        toggleMenu();
+      }
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (navLinks.classList.contains('active')) {
+          toggleMenu();
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
