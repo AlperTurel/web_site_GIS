@@ -29,6 +29,10 @@
       overflow-x: hidden;
     }
 
+    body.no-scroll {
+      overflow: hidden;
+    }
+
     /* NAV */
     nav {
       position: fixed;
@@ -83,6 +87,73 @@
 
     .nav-links a:hover::after, .nav-links a.active::after {
       width: 100%;
+    }
+
+    /* Hamburger buton */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 30px;
+      height: 25px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 200;
+    }
+
+    .hamburger span {
+      width: 30px;
+      height: 2px;
+      background: var(--gold);
+      transition: all 0.3s linear;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    /* Mobil menü */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 150;
+        backdrop-filter: blur(10px);
+        background: rgba(10,10,15,0.98);
+      }
+
+      .nav-links.active {
+        transform: translateX(0);
+      }
+
+      .nav-links a {
+        font-size: 1.2rem;
+        color: var(--white);
+      }
     }
 
     /* HERO */
@@ -284,7 +355,6 @@
 
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.2rem; }
       .hero-content { padding: 0 1.5rem; }
       .stats-bar { padding: 2rem 1.5rem; grid-template-columns: 1fr; gap: 1.5rem; }
       footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
@@ -296,6 +366,11 @@
 
 <nav>
   <a href="index.html" class="nav-logo">Alper TÜREL</a>
+  <button class="hamburger" aria-label="Menü" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Anasayfa</a></li>
     <li><a href="hakkimda.html">Hakkımda</a></li>
@@ -350,6 +425,40 @@
   <span>Ankara, Türkiye</span>
   <a href="mailto:alperturel0@gmail.com">alperturel0@gmail.com</a>
 </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const body = document.body;
+
+    function toggleMenu() {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true' ? false : true;
+      hamburger.setAttribute('aria-expanded', expanded);
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      body.classList.toggle('no-scroll');
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+
+    // Menü dışına tıklandığında kapat
+    document.addEventListener('click', function(event) {
+      if (!navLinks.contains(event.target) && !hamburger.contains(event.target) && navLinks.classList.contains('active')) {
+        toggleMenu();
+      }
+    });
+
+    // Menüdeki linklere tıklandığında kapat
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (navLinks.classList.contains('active')) {
+          toggleMenu();
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
